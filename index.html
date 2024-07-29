@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Submission</title>
+</head>
+
+<body>
+    <form id="contactForm">
+        <label for="firstname">First Name:</label>
+        <input type="text" id="firstname" name="firstname" required><br><br>
+
+        <label for="lastname">Last Name:</label>
+        <input type="text" id="lastname" name="lastname" required><br><br>
+
+        <label for="emailaddress1">Email:</label>
+        <input type="email" id="emailaddress1" name="emailaddress1" required><br><br>
+
+        <label for="mobilephone">Mobile Phone:</label>
+        <input type="text" id="mobilephone" name="mobilephone" required><br><br>
+
+        <label for="d365_message">Message:</label>
+        <textarea id="d365_message" name="d365_message" required></textarea><br><br>
+
+        <label for="companyname">Company Name:</label>
+        <input type="text" id="companyname" name="companyname"><br><br>
+
+        <label for="state">State:</label>
+        <select id="state" name="state">
+            <option value="Australian Capital Territory">Australian Capital Territory</option>
+            <option value="New South Wales">New South Wales</option>
+            <option value="Northern Territory">Northern Territory</option>
+            <option value="Queensland">Queensland</option>
+            <option value="South Australia">South Australia</option>
+            <option value="Tasmania">Tasmania</option>
+            <option value="Victoria">Victoria</option>
+            <option value="Western Australia">Western Australia</option>
+        </select><br><br>
+
+        <label for="leadsource">Lead Source:</label>
+        <select id="leadsource" name="leadsource">
+            <option value="Referral">Referral</option>
+            <option value="Google Search">Google Search</option>
+            <option value="Facebook">Facebook</option>
+            <option value="Instagram">Instagram</option>
+            <option value="LinkedIn">LinkedIn</option>
+            <option value="Existing Customer">Existing Customer</option>
+            <option value="Seminar / Webinar">Seminar / Webinar</option>
+            <option value="Trade Show">Trade Show</option>
+        </select><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var formData = {
+                firstname: document.getElementById('firstname').value,
+                lastname: document.getElementById('lastname').value,
+                emailaddress1: document.getElementById('emailaddress1').value,
+                mobilephone: document.getElementById('mobilephone').value,
+                d365_message: document.getElementById('d365_message').value,
+                companyname: document.getElementById('companyname').value,
+                state: document.getElementById('state').value,
+                leadsource: document.getElementById('leadsource').value
+            };
+
+            fetch('https://prod-16.australiasoutheast.logic.azure.com:443/workflows/f616e45f5fae49f5a6a665eb0dbeb3dd/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ScYV2fQNo5qDUAtxPnWqV9zX-f1kBoFU8gcEvzmvG5Q', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ formData: formData })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    alert('Form submitted successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Error submitting form.');
+                });
+        });
+    </script>
+</body>
+
+</html>
